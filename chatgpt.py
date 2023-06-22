@@ -1,5 +1,6 @@
 import requests
 import configparser
+import json
 
 configParser = configparser.ConfigParser()
 configParser.read("config.ini")
@@ -8,13 +9,21 @@ configParser.read("config.ini")
 class ChatgptCaller:
     def __init__(self):
         self.url = configParser.get("CHATGPT", "url")
-        self.head = {"Content-type": "application/json; charset=unicode"}
+        self.head = {
+            "Content-type": "application/json; charset=unicode",
+            "api-key": configParser.get("CHATGPT", "api-key"),
+        }
 
     def __call__(self, str):
-        data = {"msg": str}
-        print(self.url)
+        data = {"messages": [
+            {
+                "role": "user",
+                "content": str
+            }
+        ]}
         response = requests.post(url=self.url, json=data, headers=self.head)
-        return response.text
+        response = json.loads(response.text)
+        return response["choices"][0]["message"]["content"]
 
 
 class ChatgptSession:

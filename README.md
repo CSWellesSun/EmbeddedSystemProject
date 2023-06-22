@@ -8,6 +8,6 @@
 
 ## 使用 (TODO)
 
-首先需要将 `config.example.ini` 中的 `ChatGPT` 接口进行修改，目前要求一个支持 `POST` 且内容为 `{"msg":"xxx"}` 的后端接口，之后会修改成 `OPENAI` API。修改完成后将该文件重命名为 `config.ini`。
+首先需要将 `config.example.ini` 中的 `ChatGPT` 接口进行修改，目前仅支持 `Azure OpenAI` 接口（学生可免费申请），注意使用 `Azure OpenAI` 接口不需要代理。
 
 其次我们需要脸部图片，具体需要放在 `from` 、`test_faces`、`user` 三个文件夹中。
