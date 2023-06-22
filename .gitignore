@@ -1,0 +1,7 @@
+__pycache__
+facenet_pytorch/
+from/
+test_faces/
+user/
+config.ini
+*.db

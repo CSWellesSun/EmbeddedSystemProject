@@ -1,0 +1,4 @@
+facenet-pytorch
+opencv-python
+numpy
+requests
