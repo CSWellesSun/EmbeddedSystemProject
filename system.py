@@ -3,6 +3,7 @@ from face_recog import FaceRecoginition
 from chatgpt import ChatgptSession
 import sqlite3
 import os
+from model import FaceModel
 
 
 class SystemManager:

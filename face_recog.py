@@ -4,12 +4,13 @@ import os
 import cv2
 import numpy as np
 import time
+import torch
 
 
 class FaceRecoginition:
     def __init__(self):
         self.camera = CameraManager()
-        self.facemodel = FaceModel()
+        self.facemodel = torch.load("model.pt")
         self.embeds = []
         self.labels = []
         folders = os.listdir("user")
@@ -88,9 +89,4 @@ class FaceRecoginition:
 
 if __name__ == "__main__":
     f = FaceRecoginition()
-    # f.camera.setfoldername("from/u0/face")
-    # f.register()
-    # f.camera.setfoldername("from/u1/face")
-    # f.register()
-    # f.camera.setfoldername("from/u2/face")
     f.register()

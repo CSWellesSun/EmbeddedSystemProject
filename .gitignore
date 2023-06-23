@@ -5,3 +5,4 @@ test_faces/
 user/
 config.ini
 *.db
+*.pt
