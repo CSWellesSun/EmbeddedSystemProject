@@ -16,6 +16,8 @@
 
 首先使用 `python model.py` 将模型保存成 `model.pt`。
 
+由于RKNN不支持 `ReduceL1 / ReduceL2`等算子，而 `InceptionResnetV1` 里存在 `F.normalize(x, p=2)` 无法被转换成 RKNN，所以需要进入 `facenet-pytorch` 源码修改 `InceptionResnetV1`，将 `forward` 最后一层的 `normalize` 删除。
+
 ### 注册
 
 当使用 `FaceRecoginition` 的 `register` 功能时，会在 `user` 目录下创建一个新的用户 `u<id>`（例如 `u0 / u1 / u2` ），其中会保存图像处理之后的图片 `img<id>.png` 、经过 `facenet` 抽取的特征 `embed.npy` 以及用户的姓名年龄信息 `info.txt`。
