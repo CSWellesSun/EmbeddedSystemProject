@@ -1,15 +1,16 @@
-from model import FaceModel
 from camera import CameraManager
 import os
 import cv2
 import numpy as np
 import time
 import torch
+from facenet_pytorch import MTCNN
 
 
 class FaceRecoginition:
     def __init__(self):
         self.camera = CameraManager()
+        self.facedetector = MTCNN()
         self.facemodel = torch.load("model.pt")
         self.embeds = []
         self.labels = []
@@ -38,7 +39,11 @@ class FaceRecoginition:
                 if use == "n":
                     continue
 
-                embed = self.facemodel(img)
+                face = self.facedetector(img)
+                if face is None:
+                    print("未检测到人脸,请重新拍摄照片")
+                    continue
+                embed = self.facemodel(face)
                 if embed is None:
                     print("特征提取失败,请重新拍摄照片")
                 else:

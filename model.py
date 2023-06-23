@@ -1,20 +1,10 @@
 from facenet_pytorch import MTCNN, InceptionResnetV1
 import torch
 import torch.nn as nn
-
-class FaceModel(nn.Module):
-    def __init__(self):
-        super(FaceModel, self).__init__()
-        self.mtcnn = MTCNN()
-        self.resnet = InceptionResnetV1(pretrained="casia-webface").eval()
-
-    def forward(self, img):
-        img_cropped = self.mtcnn(img)
-        if img_cropped is None:
-            return None
-        else:
-            return self.resnet(img_cropped.unsqueeze(0))[0].detach().numpy()
+import cv2
 
 if __name__ == "__main__":
-    net = FaceModel()
-    torch.save(net, "model.pt")
+    net = InceptionResnetV1(pretrained='casia-webface').eval()
+    example = torch.rand(1, 3, 160, 160)
+    net = torch.jit.trace(net, example)
+    net.save("model.pt")
