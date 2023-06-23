@@ -33,7 +33,7 @@ class FaceRecoginition:
                 img = next(list)
                 cv2.imshow("", img)
                 cv2.waitKey(0)
-                use = input("是否使用改图?(Y/n)")
+                use = input("是否使用该图?(Y/n)")
                 if use == "n":
                     continue
 
@@ -88,9 +88,9 @@ class FaceRecoginition:
 
 if __name__ == "__main__":
     f = FaceRecoginition()
-    f.camera.setfoldername("from/u0/face")
-    f.register()
-    f.camera.setfoldername("from/u1/face")
-    f.register()
-    f.camera.setfoldername("from/u2/face")
+    # f.camera.setfoldername("from/u0/face")
+    # f.register()
+    # f.camera.setfoldername("from/u1/face")
+    # f.register()
+    # f.camera.setfoldername("from/u2/face")
     f.register()

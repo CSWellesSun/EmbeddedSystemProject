@@ -43,7 +43,7 @@ class SystemManager:
             self.funccall[choose]()
 
     def register(self):
-        self.face_recog.recognite()
+        self.face_recog.register()
 
     def logquery(self):
         self.db.execute("SELECT * FROM log")
@@ -109,5 +109,5 @@ class SystemManager:
 
 if __name__ == "__main__":
     system = SystemManager()
-    system.face_recog.camera.setfoldername("test_faces")
+    # system.face_recog.camera.setfoldername("test_faces")
     system.menu()

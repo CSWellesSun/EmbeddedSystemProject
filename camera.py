@@ -29,13 +29,13 @@ class CameraManager:
             yield img
 
     # def getframe(self):
-    #     file=os.listdir(self.foldname)
+    #     file = os.listdir(self.foldname)
     #     for filename in file:
-    #         filename=self.foldname+"\\"+filename
+    #         filename = self.foldname + "\\" + filename
     #         yield cv2.imread(filename)
 
-    # def setfoldername(self,path):
-    #     self.foldname=path
+    # def setfoldername(self, path):
+    #     self.foldname = path
 
 
 if __name__ == "__main__":
