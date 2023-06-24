@@ -28,7 +28,7 @@
 
 使用 USB 摄像头，只需要该摄像头能支持 `OpenCV` 即可。注意将 `camera.py` 中的 `camera` 变量改成具体的 `ID`。如果不知道 `ID` 值，可以执行 `python camera.py` 来得到获取 `ID` 值。
 
-## 使用 (TODO)
+## 使用
 
 ### 执行
 
