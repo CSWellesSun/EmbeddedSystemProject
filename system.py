@@ -7,8 +7,8 @@ from model import FaceModel
 
 
 class SystemManager:
-    def __init__(self):
-        self.face_recog = FaceRecoginition()
+    def __init__(self, rknn_file):
+        self.face_recog = FaceRecoginition(rknn_file)
         self.funccall = [
             self.register,
             self.logquery,
@@ -56,7 +56,7 @@ class SystemManager:
     def userinfoquery(self):
         foldernames = os.listdir("user")
         for foldername in foldernames:
-            filename = "user\\" + foldername + "\\info.txt"
+            filename = "user/" + foldername + "/info.txt"
             print(foldername)
             with open(filename, "rt") as f:
                 print("name:", f.readline().strip())
@@ -97,18 +97,17 @@ class SystemManager:
                 self.addlog(index, username, "usechatgpt")
                 self.chatgpt.run()
                 self.addlog(index, username, "endchatgpt")
-
         except KeyboardInterrupt:
             print("人脸检测结束")
         except Exception as e:
-            raise e
             print("发生故障,请联系管理人员修复")
+            raise e
 
     def quit(self):
         exit(0)
 
 
 if __name__ == "__main__":
-    system = SystemManager()
+    system = SystemManager("resnet.rknn")
     # system.face_recog.camera.setfoldername("test_faces")
     system.menu()

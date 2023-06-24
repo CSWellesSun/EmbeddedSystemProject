@@ -5,18 +5,19 @@ import numpy as np
 import time
 import torch
 from facenet_pytorch import MTCNN
+from model import FaceModel
 
 
 class FaceRecoginition:
-    def __init__(self):
+    def __init__(self, rknn_file):
         self.camera = CameraManager()
         self.facedetector = MTCNN()
-        self.facemodel = torch.load("model.pt")
+        self.facemodel = FaceModel(rknn_file)
         self.embeds = []
         self.labels = []
         folders = os.listdir("user")
         for i, foldname in enumerate(folders):
-            filename = "user" + "\\" + foldname + "\\" + "embed.npy"
+            filename = "user" + "/" + foldname + "/" + "embed.npy"
             self.embeds.append(np.load(filename))
             self.labels.extend(["u%d" % i for j in range(self.embeds[-1].shape[0])])
         self.embeds = np.concatenate(self.embeds)
@@ -27,14 +28,18 @@ class FaceRecoginition:
         age = input("年龄:").strip()
 
         print("按任意键拍摄一张人脸,输入ctrl+C停止拍摄")
-        list = self.camera.getframe()
         imgs = []
         embeds = []
         try:
             while True:
-                img = next(list)
-                cv2.imshow("", img)
-                cv2.waitKey(0)
+                img = None
+                while True:
+                    img = self.camera.get_one_frame()
+                    if img is None:
+                        continue
+                    cv2.imshow("Video", img) # 显示图像
+                    if cv2.waitKey(1) & 0xFF == ord('s'):
+                        break
                 use = input("是否使用该图?(Y/n)")
                 if use == "n":
                     continue
@@ -47,24 +52,30 @@ class FaceRecoginition:
                 if embed is None:
                     print("特征提取失败,请重新拍摄照片")
                 else:
+                    embed = embed[0]
+                    embed = torch.nn.functional.normalize(torch.tensor(embed), p=2, dim=1)
+                    embed = embed.numpy()
                     imgs.append(img)
                     embeds.append(embed)
                     print("特征提取成功")
         except KeyboardInterrupt:
             print("拍摄结束")
+            if len(embeds) == 0:
+                return
             folderlist = os.listdir("user")
             newfoldername = "u%d" % (len(folderlist))
-            newfoldername = "user\\" + newfoldername
+            newfoldername = "user/" + newfoldername
             os.makedirs(newfoldername)
 
             for i, img in enumerate(imgs):
-                cv2.imwrite(newfoldername + "\\img%d.png" % (i), img)
+                cv2.imwrite(newfoldername + "/img%d.png" % (i), img)
 
-            with open(newfoldername + "\\info.txt", "wt") as info:
+            with open(newfoldername + "/info.txt", "wt") as info:
                 info.writelines([name + "\n", age])
 
             embeds = np.array(embeds)
-            np.save(newfoldername + "\\embed.npy", embeds)
+            embeds = embeds[:][0][:]
+            np.save(newfoldername + "/embed.npy", embeds)
 
             self.embeds = np.concatenate([self.embeds, embeds])
             self.labels.extend(
@@ -79,7 +90,14 @@ class FaceRecoginition:
         while True:
             time.sleep(1)
             img = next(videolist)
-            embed = self.facemodel(img)
+            face = self.facedetector(img)
+            if face is None:
+                continue
+            face = face.unsqueeze(0)
+            embed = self.facemodel(face)
+            embed = embed[0]
+            embed = torch.nn.functional.normalize(torch.tensor(embed), p=2, dim=1)
+            embed = embed.numpy()
             if embed is None:
                 continue
             else:

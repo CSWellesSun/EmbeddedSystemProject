@@ -84,23 +84,4 @@ if __name__ == '__main__':
         exit(ret)
     print('done')
 
-    # Set inputs
-    # img = cv2.imread('./space_shuttle_224.jpg')
-    # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-    # # Init runtime environment
-    # print('--> Init runtime environment')
-    # ret = rknn.init_runtime()
-    # if ret != 0:
-    #     print('Init runtime environment failed!')
-    #     exit(ret)
-    # print('done')
-
-    # # Inference
-    # print('--> Running model')
-    # outputs = rknn.inference(inputs=[img])
-    # np.save('./pytorch_resnet18_qat_0.npy', outputs[0])
-    # show_outputs(softmax(np.array(outputs[0][0])))
-    # print('done')
-
     rknn.release()

@@ -1,15 +1,19 @@
-from facenet_pytorch import MTCNN, InceptionResnetV1
-import torch
-import torch.nn as nn
-import cv2
+from rknnlite.api import RKNNLite
 
-if __name__ == "__main__":
-    net = InceptionResnetV1(pretrained='casia-webface').eval()
-    example = torch.rand(1, 3, 160, 160)
-    # img = cv2.imread('./user/u0/img0.png')
-    # detect = MTCNN()
-    # img = detect(img)
-    # net(img.unsqueeze(0))
-    net = torch.jit.trace(net, example)
-    net.save("model.pt")
-    # torch.onnx.export(net, example, './resnet.onnx', opset_version=12, input_names=['input'], output_names=['output'])
+class FaceModel:
+    def __init__(self, rknn_file):
+        self.rknn_lite = RKNNLite()
+        ret = self.rknn_lite.load_rknn(rknn_file)
+        if ret != 0:
+            print('Load RKNN model failed')
+            exit(ret)
+        ret = self.rknn_lite.init_runtime()
+        if ret != 0:
+            print('Init runtime environment failed')
+            exit(ret)
+    
+    def __call__(self, face):
+        return self.rknn_lite.inference(inputs=[face])
+    
+    def __del__(self):
+        self.rknn_lite.release()
